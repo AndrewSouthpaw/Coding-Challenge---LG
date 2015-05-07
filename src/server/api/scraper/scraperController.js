@@ -1,9 +1,9 @@
 'use strict';
 
 var request = require('request');
-var cheerio = require('cheerio');
-var verror = require('verror');
 var reportError = require('../../utils/errorReporter');
+var utils = require('../../utils/scraper');
+var VError = require('verror');
 
 module.exports = {
   scrapeEvents: scrapeEvents
@@ -38,28 +38,14 @@ function scrapeEvents(req, res, next) {
   request(url, function(err, resp, body) {
     if (err) return reportError(new VError(err, 'Error requesting url'), next);
 
-    console.log('Parsing events for', url);
-
-    var $ = cheerio.load(body);
-    var results = [];
-    var numParseErrors = 0;
-
-    $('.postcard-text').each(function() {
-      // Check to see if date will parse successfully
-      var date = $(this).find('p strong').text().replace(/\s+/g, ' ');
-      if (isNaN(new Date(date))) return numParseErrors++;
-
-      // Otherwise, build a new event
-      var eventData = {};
-      eventData.name = $(this).find('h3').text().replace(/\s+/g, ' ').trim();
-      eventData.date = $(this).find('p strong').text().replace(/\s+/g, ' ');
-      results.push(eventData);
-    });
-
-    // Log number of parse errors
-    console.log('Error parsing', numParseErrors, 'out of', results.length + numParseErrors);
-
-    res.json(results);
+    // Delegate to utility module for scraping logic
+    var results;
+    try {
+      results = utils.scrapeEvents(url, body);
+      return res.json(results);
+    } catch (e) {
+      return reportError(e, next, 'Error scraping event');
+    }
   });
 
 }
