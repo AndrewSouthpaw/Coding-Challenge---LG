@@ -24,6 +24,7 @@ function scrapeEvents(url, body, cb) {
   var actions = {
     eventbrite: scrapeEventsEventbrite,
     meetup: scrapeEventsMeetup,
+    sfmoma: scrapeEventsSFMOMA,
     stanford: scrapeEventsStanford
   };
 
@@ -35,6 +36,8 @@ function scrapeEvents(url, body, cb) {
     method = 'meetup';
   } else if (/eventbrite/.test(url)) {
     method = 'eventbrite';
+  } else if (/sfmoma/.test(url)) {
+    method = 'sfmoma';
   } else {
     throw new VError('Couldn\'t find parser logic for %s', url);
   }
