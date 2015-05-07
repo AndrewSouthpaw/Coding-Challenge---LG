@@ -7,5 +7,5 @@
 
 .events(ng-repeat="event in vm.events")
   h4 {{ event.name }}
-  p {{ event.date | date }}
+  p {{ event.date | date:'EEE, MMM d, yyyy @ h:mma' }}
 
