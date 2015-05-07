@@ -174,6 +174,7 @@ function scrapeEventsSFMOMA($, url, cb) {
     eventData.name = $(this).find('.title.benton').text();
     eventData.date = dateStart;
     eventData.dateEnd = dateEnd;
+    eventData.imgSrc = url.substring(0, url.length - 1) + $(this).find('img').attr('src');
     results.push(eventData);
   });
 
