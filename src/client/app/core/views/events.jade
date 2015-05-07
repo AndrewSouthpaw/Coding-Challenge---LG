@@ -5,5 +5,7 @@
     button.btn.btn-default(type="button")
       span.glyphicon.glyphicon-th
 
-.events
-  {{ vm.events | filter:json }}
+.events(ng-repeat="event in vm.events")
+  h4 {{ event.name }}
+  p {{ event.date | date }}
+
