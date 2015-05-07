@@ -11,9 +11,7 @@
       templateUrl: '/html/core/directives/nav-bar.directive.html',
       restrict: 'E',
       scope: true,
-      transclude: true,
-      controller: 'NavbarController',
-      controllerAs: 'vm'
+      transclude: true
     };
 
   }

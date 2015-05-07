@@ -21,7 +21,9 @@
           },
 
           'events@landing': {
-            templateUrl: '/html/core/views/events.html'
+            templateUrl: '/html/core/views/events.html',
+            controller: 'EventsController',
+            controllerAs: 'vm'
           },
 
           'find-events@landing': {

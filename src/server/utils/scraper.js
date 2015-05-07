@@ -62,7 +62,7 @@ function scrapeEventsStanford($) {
     // Otherwise, build a new event
     var eventData = {};
     eventData.name = $(this).find('h3').text().replace(/\s+/g, ' ').trim();
-    eventData.date = $(this).find('p strong').text().replace(/\s+/g, ' ');
+    eventData.date = new Date(date);
     results.push(eventData);
   });
 
