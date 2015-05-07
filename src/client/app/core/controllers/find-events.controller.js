@@ -6,23 +6,20 @@
     .controller('FindEventsController', FindEventsController);
 
   /* @ngInject */
-  function FindEventsController($http) {
+  function FindEventsController(events) {
     var vm = this;
-    vm.scrapeEvent = scrapeEvent;
+    // Data
+    vm.url = '';
+
+    // Methods
+    vm.scrapeEventsPage = scrapeEventsPage;
 
     //////////
 
-    function scrapeEvent() {
+    function scrapeEventsPage() {
       console.log('Scraping event', vm.url);
-      $http({
-        method: 'GET',
-        url: '/1/scrape?url=' + vm.url
-      }).then(function(res) {
-        console.log(res.data);
-      }).catch(function(err) {
-        console.error('Error scraping page', vm.url);
-        console.error(err);
-      });
+      events.scrapeEventsPage('/1/scrape?url=' + vm.url);
+      vm.url = '';
     }
 
   }

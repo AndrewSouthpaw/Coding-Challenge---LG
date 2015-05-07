@@ -1,6 +1,9 @@
-div.layout-selector
+.layout-selector
   h3 Select layout:
     button.btn.btn-default(type="button")
       span.glyphicon.glyphicon-th-list
     button.btn.btn-default(type="button")
       span.glyphicon.glyphicon-th
+
+.events
+  {{ vm.events | filter:json }}
