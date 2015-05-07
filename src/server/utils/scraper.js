@@ -26,7 +26,7 @@ function scrapeEvents(url, body) {
   };
 
   // Choose specialized parser based on URL
-  var method = ''
+  var method = '';
   if (/stanford/.test(url)) {
     method = 'stanford';
   } else {
