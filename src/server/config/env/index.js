@@ -17,7 +17,4 @@ module.exports = {
   // Server port
   port: nconf.get('PORT') || 3000,
 
-  // Express session
-  expressSessionSecret: nconf.get('EXPRESS_SESSION_SECRET'),
-
 };
