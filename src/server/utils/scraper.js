@@ -52,6 +52,13 @@ function scrapeEvents(url, body, cb) {
   });
 }
 
+/**
+ * Specialized scraper for Eventbrite. Uses PhantomJS.
+ * @param  {Cheerio data}   $   DOM parsed tree
+ * @param  {String}   url Original url
+ * @param  {Function} cb  Callback
+ * @return {undefined}
+ */
 function scrapeEventsEventbrite($, url, cb) {
   var results = [];
   var numParseErrors = 0;

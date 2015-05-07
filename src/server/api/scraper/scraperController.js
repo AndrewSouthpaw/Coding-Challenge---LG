@@ -41,6 +41,7 @@ function scrapeEvents(req, res, next) {
    */
   var url = req.originalUrl.replace('/1/scrape/', '');
 
+  // TODO: refactor to not create redundant request + phantom action on eventbrite
   request(url, function(err, resp, body) {
     if (err) return reportError(new VError(err, 'Error requesting url'), next);
 
