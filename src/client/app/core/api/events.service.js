@@ -24,8 +24,7 @@
         method: 'GET',
         url: url
       }).then(function(res) {
-        console.log(res.data);
-        service.events.events = res.data;
+        service.events = res.data;
       }).catch(function(err) {
         console.error('Error scraping page', url);
         console.error(err);

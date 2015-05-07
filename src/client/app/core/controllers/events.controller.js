@@ -6,11 +6,11 @@
     .controller('EventsController', EventsController);
 
   /* @ngInject */
-  function EventsController() {
+  function EventsController($scope, events) {
     var vm = this;
 
     // Data
-    vm.events = [];
+    vm.events = events.events;
 
     // Methods
     vm.displayEvents = displayEvents;
@@ -25,6 +25,15 @@
     function displayEvents(events) {
       vm.events = events;
     }
+
+    /**
+     * Listen for changes to events listing
+     */
+    $scope.$watch(function() {
+      return events.events;
+    }, function(newValue) {
+      vm.events = events.events;
+    });
   }
 
 }).call(this);
