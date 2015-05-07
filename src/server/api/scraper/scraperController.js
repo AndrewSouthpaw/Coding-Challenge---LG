@@ -41,14 +41,16 @@ function scrapeEvents(req, res, next) {
    */
   var url = req.originalUrl.replace('/1/scrape/', '');
 
+  // TODO: refactor to not create redundant request + phantom action on eventbrite
   request(url, function(err, resp, body) {
     if (err) return reportError(new VError(err, 'Error requesting url'), next);
 
     // Delegate to utility module for scraping logic
     var results;
     try {
-      results = utils.scrapeEvents(url, body);
-      return res.json(results);
+      utils.scrapeEvents(url, body, function(results) {
+        return res.json(results);
+      });
     } catch (e) {
       return reportError(e, next, 'Error scraping event');
     }
