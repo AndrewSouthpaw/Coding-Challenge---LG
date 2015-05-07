@@ -16,12 +16,13 @@ module.exports = {
  * @param  {String} body Raw request data from page
  * @return {Array}       List of events
  */
-function scrapeEvents(url, body) {
+function scrapeEvents(url, body, cb) {
 
   console.log('Parsing events for', url);
 
   // available specialized scraper logic
   var actions = {
+    eventbrite: scrapeEventsEventbrite,
     meetup: scrapeEventsMeetup,
     stanford: scrapeEventsStanford
   };
@@ -32,20 +33,67 @@ function scrapeEvents(url, body) {
     method = 'stanford';
   } else if (/meetup/.test(url)) {
     method = 'meetup';
+  } else if (/eventbrite/.test(url)) {
+    method = 'eventbrite';
   } else {
     throw new VError('Couldn\'t find parser logic for %s', url);
   }
 
   // parse HTML into events
   var $ = cheerio.load(body);
-  var parsedData = actions[method]($);
+  var parsedData = actions[method]($, url, function(numParseErrors, results) {
 
-  // Log number of parse errors
-  console.log('Error parsing', parsedData.numParseErrors,
-              'out of', parsedData.results.length + parsedData.numParseErrors);
+    // Log number of parse errors
+    console.log('Error parsing', numParseErrors,
+                'out of', results.length + numParseErrors);
 
-  // response with results
-  return parsedData.results;
+    // respond with results
+    cb(results);
+  });
+}
+
+function scrapeEventsEventbrite($, url, cb) {
+  var results = [];
+  var numParseErrors = 0;
+
+  /**
+   * Eventbrite loads events dynamically, so a simple scraping will not work.
+   * Instead, navigate to site using Phantom to extract data.
+   *
+   * Phantom logic modified from http://code.tutsplus.com/tutorials/screen-scraping-with-nodejs--net-25560
+   */
+  var phantom = require('phantom');
+  phantom.create(function(ph) {
+    return ph.createPage(function(page) {
+      return page.open(url, function(status) {
+        page.injectJs('http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function() {
+          return page.evaluate(function() {
+            var results = [];
+            var numParseErrors = 0;
+            $('.event-poster').each(function() {
+              // check for malformed date
+              var date = new Date($(this).find('.event-poster__date')
+                                    .text()
+                                    .replace(/\s+/g, ' ')
+                                    .replace(/None/, new Date().getFullYear()));
+              if (isNaN(date)) return numParseErrors++;
+
+              // Otherwise, build event
+              var eventData = {};
+              eventData.name = $(this).find('.event-poster__title').text().trim();
+              eventData.date = date;
+              results.push(eventData);
+            });
+
+            return {numParseErrors: numParseErrors, results: results};
+          }, function(result) {
+            ph.exit();
+            cb(result.numParseErrors, result.results)
+          });
+        });
+      });
+    });
+  });
 }
 
 /**
@@ -53,7 +101,7 @@ function scrapeEvents(url, body) {
  * @param  {Cheerio data} $ DOM tree parsed by Cheerio of webpage
  * @return {Object}   Number of errors parsing and list of events
  */
-function scrapeEventsMeetup($) {
+function scrapeEventsMeetup($, url, cb) {
   var results = [];
   var numParseErrors = 0;
 
@@ -69,7 +117,7 @@ function scrapeEventsMeetup($) {
     results.push(eventData);
   });
 
-  return {numParseErrors: numParseErrors, results: results};
+  cb(numParseErrors, results);
 }
 
 /**
@@ -77,7 +125,7 @@ function scrapeEventsMeetup($) {
  * @param  {Cheerio data} $ DOM tree parsed by Cheerio of webpage
  * @return {Object}   Number of errors parsing and list of events
  */
-function scrapeEventsStanford($) {
+function scrapeEventsStanford($, url, cb) {
   var results = [];
   var numParseErrors = 0;
 
@@ -93,5 +141,5 @@ function scrapeEventsStanford($) {
     results.push(eventData);
   });
 
-  return {numParseErrors: numParseErrors, results: results};
+  cb(numParseErrors, results);
 }

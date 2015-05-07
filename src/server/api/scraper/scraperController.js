@@ -47,8 +47,9 @@ function scrapeEvents(req, res, next) {
     // Delegate to utility module for scraping logic
     var results;
     try {
-      results = utils.scrapeEvents(url, body);
-      return res.json(results);
+      utils.scrapeEvents(url, body, function(results) {
+        return res.json(results);
+      });
     } catch (e) {
       return reportError(e, next, 'Error scraping event');
     }

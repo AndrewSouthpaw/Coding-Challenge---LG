@@ -60,6 +60,7 @@
     "main-bower-files": "^2.5.0",
     "morgan": "^1.5.1",
     "nconf": "^0.7.1",
+    "phantom": "^0.7.2",
     "request": "^2.53.0",
     "verror": "^1.6.0"
   },
