@@ -166,12 +166,14 @@ function scrapeEventsSFMOMA($, url, cb) {
   $('.mod.third').each(function() {
     // Check to see if date will parse successfully
     var dateStart = new Date($(this).find('.dtstart').attr('title'));
-    if (isNaN(new Date(dateStart))) return numParseErrors++;
+    var dateEnd = new Date($(this).find('.dtend').attr('title'));
+    if (isNaN(dateStart) || isNaN(dateEnd)) return numParseErrors++;
 
     // Otherwise, build a new event
     var eventData = {};
     eventData.name = $(this).find('.title.benton').text();
-    eventData.date = new Date(dateStart);
+    eventData.date = dateStart;
+    eventData.dateEnd = dateEnd;
     results.push(eventData);
   });
 
