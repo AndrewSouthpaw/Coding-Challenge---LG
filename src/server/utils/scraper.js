@@ -139,7 +139,7 @@ function scrapeEventsStanford($, url, cb) {
   var results = [];
   var numParseErrors = 0;
 
-  $('.postcard-text').each(function() {
+  $('.postcard-left').each(function() {
     // Check to see if date will parse successfully
     var date = $(this).find('p strong').text().replace(/\s+/g, ' ');
     if (isNaN(new Date(date))) return numParseErrors++;
@@ -148,6 +148,7 @@ function scrapeEventsStanford($, url, cb) {
     var eventData = {};
     eventData.name = $(this).find('h3').text().replace(/\s+/g, ' ').trim();
     eventData.date = new Date(date);
+    eventData.imgSrc = url.substring(0, url.length) + $(this).find('img').attr('src');
     results.push(eventData);
   });
 
