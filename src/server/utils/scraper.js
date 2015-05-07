@@ -24,6 +24,7 @@ function scrapeEvents(url, body, cb) {
   var actions = {
     eventbrite: scrapeEventsEventbrite,
     meetup: scrapeEventsMeetup,
+    sfmoma: scrapeEventsSFMOMA,
     stanford: scrapeEventsStanford
   };
 
@@ -35,6 +36,8 @@ function scrapeEvents(url, body, cb) {
     method = 'meetup';
   } else if (/eventbrite/.test(url)) {
     method = 'eventbrite';
+  } else if (/sfmoma/.test(url)) {
+    method = 'sfmoma';
   } else {
     throw new VError('Couldn\'t find parser logic for %s', url);
   }
@@ -145,6 +148,32 @@ function scrapeEventsStanford($, url, cb) {
     var eventData = {};
     eventData.name = $(this).find('h3').text().replace(/\s+/g, ' ').trim();
     eventData.date = new Date(date);
+    results.push(eventData);
+  });
+
+  cb(numParseErrors, results);
+}
+
+/**
+ * Specialized scraper for SFMOMA
+ * @param  {Cheerio data} $ DOM tree parsed by Cheerio of webpage
+ * @return {Object}   Number of errors parsing and list of events
+ */
+function scrapeEventsSFMOMA($, url, cb) {
+  var results = [];
+  var numParseErrors = 0;
+
+  $('.mod.third').each(function() {
+    // Check to see if date will parse successfully
+    var dateStart = new Date($(this).find('.dtstart').attr('title'));
+    var dateEnd = new Date($(this).find('.dtend').attr('title'));
+    if (isNaN(dateStart) || isNaN(dateEnd)) return numParseErrors++;
+
+    // Otherwise, build a new event
+    var eventData = {};
+    eventData.name = $(this).find('.title.benton').text();
+    eventData.date = dateStart;
+    eventData.dateEnd = dateEnd;
     results.push(eventData);
   });
 

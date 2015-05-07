@@ -10,4 +10,5 @@
               ng-repeat="event in vm.events")
     .content
       h4 {{ event.name }}
-      p {{ event.date | date:'EEE, MMM d, yyyy @ h:mma' }}
+      p(ng-hide="event.dateEnd") {{ event.date | date:'EEE, MMM d, yyyy @ h:mma' }}
+      p(ng-show="event.dateEnd") {{ event.date | date:'EEE, MMM d'}} - {{ event.dateEnd | date:'EEE, MMM d, yyyy'}}
