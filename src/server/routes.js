@@ -1,8 +1,11 @@
 var router = require('express').Router();
 var path = require('path');
-// var errorHandler = require('./utils/errorHandler');
+var errorHandler = require('./utils/errorHandler');
 
 module.exports = function applicationRouter(app) {
+
+  // Load scraping route onto router
+  require('./api/scraper')(router);
 
   /**
    * catchall router if the request hasn't been handled by the other routes.
@@ -17,7 +20,7 @@ module.exports = function applicationRouter(app) {
   // Place router on app
   app.use(router);
 
-  // // Set error handling
-  // app.use(errorHandler);
+  // Set error handling
+  app.use(errorHandler);
 
 };
