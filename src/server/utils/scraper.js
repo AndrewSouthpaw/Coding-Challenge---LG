@@ -92,6 +92,7 @@ function scrapeEventsEventbrite($, url, cb) {
               var eventData = {};
               eventData.name = $(this).find('.event-poster__title').text().trim();
               eventData.date = date;
+              // unable to find images on Eventbrite??
               results.push(eventData);
             });
 
@@ -124,6 +125,7 @@ function scrapeEventsMeetup($, url, cb) {
     var eventData = {};
     eventData.name = $(this).find('.event-title span').text();
     eventData.date = date;
+    // no images available for meetup
     results.push(eventData);
   });
 
