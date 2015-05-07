@@ -150,3 +150,27 @@ function scrapeEventsStanford($, url, cb) {
 
   cb(numParseErrors, results);
 }
+
+/**
+ * Specialized scraper for SFMOMA
+ * @param  {Cheerio data} $ DOM tree parsed by Cheerio of webpage
+ * @return {Object}   Number of errors parsing and list of events
+ */
+function scrapeEventsSFMOMA($, url, cb) {
+  var results = [];
+  var numParseErrors = 0;
+
+  $('.mod.third').each(function() {
+    // Check to see if date will parse successfully
+    var dateStart = new Date($(this).find('.dtstart').attr('title'));
+    if (isNaN(new Date(dateStart))) return numParseErrors++;
+
+    // Otherwise, build a new event
+    var eventData = {};
+    eventData.name = $(this).find('.title.benton').text();
+    eventData.date = new Date(dateStart);
+    results.push(eventData);
+  });
+
+  cb(numParseErrors, results);
+}
