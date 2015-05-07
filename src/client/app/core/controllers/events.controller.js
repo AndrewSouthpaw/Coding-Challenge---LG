@@ -11,9 +11,11 @@
 
     // Data
     vm.events = events.events;
+    vm.viewMode = 'list';
 
     // Methods
     vm.displayEvents = displayEvents;
+    vm.changeViewMode = changeViewMode;
 
     /////////////
 
@@ -24,6 +26,15 @@
      */
     function displayEvents(events) {
       vm.events = events;
+    }
+
+    /**
+     * Changes the view mode for events
+     * @param  {String} mode New mode to be used, 'list' or 'grid'
+     * @return {undefined}
+     */
+    function changeViewMode(mode) {
+      vm.viewMode = mode;
     }
 
     /**

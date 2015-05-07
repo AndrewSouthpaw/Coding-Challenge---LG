@@ -1,11 +1,13 @@
 .layout-selector
   h3 Select layout:
-    button.btn.btn-default(type="button")
+    button.btn.btn-default(type="button" ng-click="vm.changeViewMode('list')")
       span.glyphicon.glyphicon-th-list
-    button.btn.btn-default(type="button")
+    button.btn.btn-default(type="button" ng-click="vm.changeViewMode('grid')")
       span.glyphicon.glyphicon-th
 
-.events(ng-repeat="event in vm.events")
-  h4 {{ event.name }}
-  p {{ event.date | date:'EEE, MMM d, yyyy @ h:mma' }}
-
+.events
+  .event-card(ng-class="'event-card-' + vm.viewMode"
+              ng-repeat="event in vm.events")
+    .content
+      h4 {{ event.name }}
+      p {{ event.date | date:'EEE, MMM d, yyyy @ h:mma' }}
