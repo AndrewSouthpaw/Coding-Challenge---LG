@@ -95,7 +95,7 @@ function scrapeEventsEventbrite($, url, cb) {
             return {numParseErrors: numParseErrors, results: results};
           }, function(result) {
             ph.exit();
-            cb(result.numParseErrors, result.results)
+            cb(result.numParseErrors, result.results);
           });
         });
       });
