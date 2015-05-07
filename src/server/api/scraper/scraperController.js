@@ -33,7 +33,13 @@ module.exports = {
  */
 function scrapeEvents(req, res, next) {
 
-  var url = req.query.url;
+  /**
+   * Extract url from request. Sometimes the requested url will have its own
+   * search parameters, which will throw off parsing by Express. So, use the
+   * originalUrl property and remove the API prefix to get the intended
+   * url for scraping.
+   */
+  var url = req.originalUrl.replace('/1/scrape/', '');
 
   request(url, function(err, resp, body) {
     if (err) return reportError(new VError(err, 'Error requesting url'), next);

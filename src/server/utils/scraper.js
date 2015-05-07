@@ -22,6 +22,7 @@ function scrapeEvents(url, body) {
 
   // available specialized scraper logic
   var actions = {
+    meetup: scrapeEventsMeetup,
     stanford: scrapeEventsStanford
   };
 
@@ -29,6 +30,8 @@ function scrapeEvents(url, body) {
   var method = '';
   if (/stanford/.test(url)) {
     method = 'stanford';
+  } else if (/meetup/.test(url)) {
+    method = 'meetup';
   } else {
     throw new VError('Couldn\'t find parser logic for %s', url);
   }
@@ -43,6 +46,30 @@ function scrapeEvents(url, body) {
 
   // response with results
   return parsedData.results;
+}
+
+/**
+ * Specialized scraper for Meetup search
+ * @param  {Cheerio data} $ DOM tree parsed by Cheerio of webpage
+ * @return {Object}   Number of errors parsing and list of events
+ */
+function scrapeEventsMeetup($) {
+  var results = [];
+  var numParseErrors = 0;
+
+  $('.event-listing').each(function() {
+    // Check to see if date will parse successfully
+    var date = new Date($(this).find('time[itemprop="startDate"]').attr('datetime'));
+    if (isNaN(date)) return numParseErrors++;
+
+    // Otherwise, build a new event
+    var eventData = {};
+    eventData.name = $(this).find('.event-title span').text();
+    eventData.date = date;
+    results.push(eventData);
+  });
+
+  return {numParseErrors: numParseErrors, results: results};
 }
 
 /**

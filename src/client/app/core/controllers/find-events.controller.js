@@ -18,7 +18,7 @@
 
     function scrapeEventsPage() {
       console.log('Scraping event', vm.url);
-      events.scrapeEventsPage('/1/scrape?url=' + vm.url);
+      events.scrapeEventsPage('/1/scrape/' + vm.url);
       vm.url = '';
     }
 
