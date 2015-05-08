@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
-// var config = require('./env');
+var config = require('./env');
 var session = require('express-session');
 var cors = require('cors');
 
@@ -21,18 +21,6 @@ module.exports = function expressConfig(app) {
   // set static asset dir
   app.use(express.static(__dirname + '/../../../build/'));
 
-  app.use(session({
-    secret: 'testsecret',
-    // secret: config.expressSessionSecret,
-    resave: false,
-    saveUninitialized: true
-  }));
-
   // dynamically set port if in production otherwise use port 3000
-  app.set('port', 3000);
-  // app.set('port', config.port);
-  // app.set('jwtTokenSecret', config.jwtTokenSecret);
-
-  // Seed database if specified
-  // if (config.seedDB) require('./seed');
+  app.set('port', config.port);
 };

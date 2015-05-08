@@ -7,7 +7,7 @@
   "scripts": {
     "test": "gulp lint",
     "postinstall": "node_modules/bower/bin/bower install && gulp deploy",
-    "start": "gulp"
+    "start": "node src/server/index.js"
   },
   "repository": {
     "type": "git",
