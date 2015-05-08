@@ -1,6 +1,6 @@
 {
   "name": "LeadGenius-Coding-Challenge",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "> MEAN SPA that displays events scraped from an input website.",
   "private": true,
   "main": "Gulpfile.js",
