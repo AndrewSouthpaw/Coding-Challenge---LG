@@ -9,6 +9,9 @@
   .event-card(ng-class="'event-card-' + vm.viewMode"
               ng-repeat="event in vm.events")
     .content
-      h4 {{ event.name }}
-      p(ng-hide="event.dateEnd") {{ event.date | date:'EEE, MMM d, yyyy @ h:mma' }}
-      p(ng-show="event.dateEnd") {{ event.date | date:'EEE, MMM d'}} - {{ event.dateEnd | date:'EEE, MMM d, yyyy'}}
+      .event-image
+        img(ng-src="{{ event.imgSrc }}")
+      .event-content
+        h4 {{ event.name }}
+        p(ng-hide="event.dateEnd") {{ event.date | date:'EEE, MMM d, yyyy @ h:mma' }}
+        p(ng-show="event.dateEnd") {{ event.date | date:'EEE, MMM d'}} - {{ event.dateEnd | date:'EEE, MMM d, yyyy'}}
